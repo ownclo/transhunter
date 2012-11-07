@@ -5,4 +5,4 @@ page = urlopen("http://habrahabr.ru/")
 soup = BeautifulSoup(page.read())
 
 for topic in soup.findAll(True, 'post_title'):
-    print ("%s -- %s" % (topic.contents[0], topic['href']))
+    print ("%s -- %s" % (topic['href'], topic.contents[0]))
