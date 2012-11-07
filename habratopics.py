@@ -1,5 +1,6 @@
-from urllib2 import urlopen
-from BeautifulSoup import BeautifulSoup
+#!/usr/bin/python3
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 
 page = urlopen("http://habrahabr.ru/")
 soup = BeautifulSoup(page.read())

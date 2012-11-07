@@ -1,10 +1,11 @@
-from urllib2 import urlopen
-from BeautifulSoup import BeautifulSoup
+#!/usr/bin/python3
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 
 f = urlopen('http://google.ru/')
 data = f.read()
 
-soup = BeautifulSoup (data, fromEncoding="cp1251")
+soup = BeautifulSoup (data, from_encoding="cp1251")
 string = soup.prettify()
 
 for item in soup.findAll(True):
