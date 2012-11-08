@@ -1,0 +1,10 @@
+# There are default installation instructions needed for Ubuntu12.10
+# For Ubuntu10.xx (python3.1, not 3.3) you should modify bs4 library
+# in a way that "from .. import _htmlparser" becomes "from . import"
+
+#if you need to
+sudo apt-get install python-pip
+sudo pip install beautifulsoup4
+# If you do not have python3 as a default, then
+sudo cp -r /usr/local/lib/python2.7/dist-packages/bs4/ /usr/local/lib/python3.2/dist-packages/
+sudo 2to3 -w /usr/lib/python3.2/dist-packages/bs4
