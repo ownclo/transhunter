@@ -6,5 +6,6 @@
 sudo apt-get install python-pip
 sudo pip install beautifulsoup4
 # If you do not have python3 as a default, then
-sudo cp -r /usr/local/lib/python2.7/dist-packages/bs4/ /usr/local/lib/python3.2/dist-packages/
-sudo 2to3 -w /usr/lib/python3.2/dist-packages/bs4
+# NO MORE. I just added bs4 in the project directory
+#sudo cp -r /usr/local/lib/python2.7/dist-packages/bs4/ /usr/local/lib/python3.2/dist-packages/
+#sudo 2to3 -w /usr/lib/python3.2/dist-packages/bs4
