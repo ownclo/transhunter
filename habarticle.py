@@ -8,8 +8,8 @@ with open ('article.html', 'r') as page:
     soup = BeautifulSoup(page.read())
 
 id_pattern = re.compile("^comment_")
-class_pattern = "message html_format "
+adict = {'class':'comment_item', 'id':id_pattern}
 
-for comment in soup.findAll (name = 'div',
-                        attrs = {'class' : class_pattern}):
-    print (comment.prettify())
+for comment in soup.findAll (name = 'div', attrs = adict):
+    score = comment.find (name = 'span', attrs = {'class' : 'score'})
+    print (score.string)
