@@ -5,43 +5,51 @@ from bs4 import BeautifulSoup
 from operator import itemgetter
 import re
 
-def parse (page):
-    if isfile(page):
-        content = open (page, 'r')
-    else:
-        content = urlopen(page)
-    soup = BeautifulSoup(content.read())
-    return soup
+class Parser:
+    def __init__ (self, pageaddr):
+        self.pageaddr = pageaddr
+        self.page = self.parse()
 
-def get_score(score_tag):
-    score_string = score_tag['title'].split(':')[0]
-    score_num = int (score_string.split()[1])
-    return score_num
+    def parse (self):
+        if isfile(self.pageaddr):
+            content = open (self.pageaddr, 'r')
+        else:
+            content = urlopen(self.pageaddr)
+        soup = BeautifulSoup(content.read())
+        return soup
 
-def rateComments (soup):
-    id_pattern = re.compile("^comment_")
-    adict = {'class':'comment_item', 'id':id_pattern}
-    rated_comments = []
+class Rater:
+    def __init__ (self, soup):
+        self.rated_comments = []
+        self.soup = soup
 
-    for comment in soup.findAll (name = 'div', attrs = adict):
-        score_tag = comment.find (name = 'span', attrs = {'class' : 'score'})
-        score = get_score(score_tag)
-        rated_comments.append({'comment' : comment, 'score' : score})
-    return rated_comments
+    def rate(self):
+        id_pattern = re.compile("^comment_")
+        adict = {'class':'comment_item', 'id':id_pattern}
 
-def sortComments (rated_comments):
-    sorted_comments = sorted (rated_comments, reverse = True, key=itemgetter('score'))
-    return sorted_comments
+        for comment in self.soup.findAll (name = 'div', attrs = adict):
+            score_tag = comment.find (name = 'span', attrs = {'class' : 'score'})
+            score = self.get_score(score_tag)
+            self.rated_comments.append({'comment' : comment, 'score' : score})
+        return self
 
-def print_rates (sorted_comments):
-    for item in sorted_comments:
-        print (item['score'])
+    def sort(self):
+        self.sorted_comments = sorted (self.rated_comments, reverse = True, key=itemgetter('score'))
 
-def main (page):
-    soup = parse (page)
-    rated_comments = rateComments (soup)
-    sorted_comments = sortComments (rated_comments)
-    print_rates(sorted_comments)
+    def get_score(self, score_tag):
+        score_string = score_tag['title'].split(':')[0]
+        score_num = int (score_string.split()[1])
+        return score_num
+
+    def print_rates(self):
+        for item in self.sorted_comments:
+            print (item['score'])
+
+def main (pageaddr):
+    soup = Parser(pageaddr).page
+    sortd = Rater(soup)
+    sortd.rate().sort()
+    sortd.print_rates()
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
