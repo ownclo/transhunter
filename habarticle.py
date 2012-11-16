@@ -6,64 +6,75 @@ from bs4 import BeautifulSoup
 from operator import itemgetter
 import re
 
-class Parser:
+class Reader:
     def __init__ (self, pageaddr):
         self.pageaddr = pageaddr
-        self.page = self.parse()
+        self.page = self.read()
 
-    def parse (self):
+    def read (self):
         if self.pageaddr is sys.stdin:
             content = pageaddr.read()
         elif isfile(self.pageaddr):
                 content = open (self.pageaddr, 'r').read()
         else:
             content = urlopen(self.pageaddr).read()
-        soup = BeautifulSoup(content)
-        return soup
+        return content
 
-class Rater:
-    def __init__ (self, soup):
-        self.rated_comments = []
-        self.soup = soup
-        id_pattern = re.compile("^comment_")
-        self.adict = {'class':'comment_item', 'id':id_pattern}
+id_pattern = re.compile("^comment_")
+adict = {'class':'comment_item', 'id':id_pattern}
+topCommentsDict = {'class':'comments_list ', 'id':'comments'}
 
-    def rate(self):
-        for comment in self.soup.findAll (name = 'div', attrs = self.adict):
-            content = self.get_content (comment)
-            score = self.get_score(comment)
-            self.rated_comments.append({'comment' : content, 'score' : score})
-        return self
+class Parser:
+    def parse (content):
+        return BeautifulSoup(content)
 
-    def sort(self):
-        self.sorted_comments = sorted (self.rated_comments,
-                                       key=itemgetter('score'),
-                                       reverse = True)
+    def findComments (soup):
+        return soup.findAll (name = 'div', attrs = adict)
 
-    def get_content (self, comment):
-        content = comment.find (name = 'div', attrs = self.adict)
+    def get_content (comment):
+        content = comment.find (name = 'div', attrs = adict)
         if not content: content = comment
+        return content
 
-    def get_score(self, comment):
+    def get_score(comment):
         score_tag = comment.find (name = 'span', attrs = {'class' : 'score'})
         score_string = score_tag['title'].split(':')[0]
         score_num = int (score_string.split()[1])
         return score_num
 
-    def print_rates(self):
-        for item in self.sorted_comments:
+    def prettyString (item):
+        return item.prettify()
+
+class Rater:
+    def rate(soup):
+        rated_comments = []
+        for comment in Parser.findComments(soup):
+            content = Parser.get_content (comment)
+            score = Parser.get_score(comment)
+            rated_comments.append({'comment' : content, 'score' : score})
+        return rated_comments
+
+    def sort(rated_comments):
+        sorted_comments = sorted (rated_comments,
+                                       key=itemgetter('score'),
+                                       reverse = True)
+        return sorted_comments
+
+    def print_rates(sorted_comments):
+        for item in sorted_comments:
             print (item['score'])
 
-    def print_comments(self):
-        for item in self.sorted_comments:
-            print (item['comment'].prettify())
-
+    def print_comments(sorted_comments):
+        for item in sorted_comments:
+            print (Parser.prettyString(item['comment']))
 
 def main (pageaddr):
-    soup = Parser(pageaddr).page
-    sortd = Rater(soup)
-    sortd.rate().sort()
-    sortd.print_rates()
+    page = Reader(pageaddr).page
+    soup = Parser.parse(page)
+    rated = Rater.rate (soup)
+    sortd = Rater.sort (rated)
+    Rater.print_rates (sortd)
+    subtree = soup.find (name = 'div', attrs = topCommentsDict)
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
