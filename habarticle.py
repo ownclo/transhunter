@@ -20,19 +20,19 @@ class Reader:
             content = urlopen(self.pageaddr).read()
         return content
 
-id_pattern = re.compile("^comment_")
-adict = {'class':'comment_item', 'id':id_pattern}
-topCommentsDict = {'class':'comments_list ', 'id':'comments'}
-
 class Parser:
+    id_pattern = re.compile("^comment_")
+    adict = {'class':'comment_item', 'id':id_pattern}
+    topCommentsDict = {'class':'comments_list ', 'id':'comments'}
+
     def parse (content):
         return BeautifulSoup(content)
 
     def findComments (soup):
-        return soup.findAll (name = 'div', attrs = adict)
+        return soup.findAll (name = 'div', attrs = Parser.adict)
 
     def get_content (comment):
-        content = comment.find (name = 'div', attrs = adict)
+        content = comment.find (name = 'div', attrs = Parser.adict)
         if not content: content = comment
         return content
 
@@ -74,7 +74,7 @@ def main (pageaddr):
     rated = Rater.rate (soup)
     sortd = Rater.sort (rated)
     Rater.print_rates (sortd)
-    subtree = soup.find (name = 'div', attrs = topCommentsDict)
+    subtree = soup.find (name = 'div', attrs = Parser.topCommentsDict)
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
