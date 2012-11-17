@@ -56,8 +56,7 @@ class Rater:
 
     def sort(rated_comments):
         sorted_comments = sorted (rated_comments,
-                                       key=itemgetter('score'),
-                                       reverse = True)
+                                       key=itemgetter('score'))
         return sorted_comments
 
     def print_rates(sorted_comments):
@@ -74,7 +73,17 @@ def main (pageaddr):
     rated = Rater.rate (soup)
     sortd = Rater.sort (rated)
     Rater.print_rates (sortd)
+
     subtree = soup.find (name = 'div', attrs = Parser.topCommentsDict)
+    comments = subtree.findAll (recursive = False, name = 'div')
+
+    [comment.extract() for comment in comments]
+
+    for comment in sortd:
+        subtree.insert(2, comment['comment'])
+
+    #soup.find (name = 'div', attrs = Parser.topCommentsDict).replaceWidth(subtree)
+    #print (subtree.prettify())
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
