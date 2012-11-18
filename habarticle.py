@@ -31,10 +31,9 @@ class Parser:
     def findComments (soup):
         return soup.findAll (name = 'div', attrs = Parser.adict)
 
-    def get_content (comment):
-        content = comment.find (name = 'div', attrs = Parser.adict)
-        if not content: content = comment
-        return content
+    def get_rid_of_answers (comment):
+        answers = comment.findAll (recursive = False, attrs = Parser.adict)
+        [answer.extract() for answer in answers]
 
     def get_score(comment):
         score_tag = comment.find (name = 'span', attrs = {'class' : 'score'})
@@ -49,14 +48,15 @@ class Rater:
     def rate(soup):
         rated_comments = []
         for comment in Parser.findComments(soup):
-            content = Parser.get_content (comment)
+            Parser.get_rid_of_answers (comment)
             score = Parser.get_score(comment)
-            rated_comments.append({'comment' : content, 'score' : score})
+            rated_comments.append({'comment' : comment, 'score' : score})
         return rated_comments
 
     def sort(rated_comments):
         sorted_comments = sorted (rated_comments,
-                                       key=itemgetter('score'))
+                                       key=itemgetter('score'),
+                                       reverse = True)
         return sorted_comments
 
     def print_rates(sorted_comments):
@@ -75,15 +75,15 @@ def main (pageaddr):
     Rater.print_rates (sortd)
 
     subtree = soup.find (name = 'div', attrs = Parser.topCommentsDict)
-    comments = subtree.findAll (recursive = False, name = 'div')
 
+    comments = subtree.findAll (recursive = False, name = 'div')
     [comment.extract() for comment in comments]
 
     for comment in sortd:
-        subtree.insert(2, comment['comment'])
+        subtree.insert(-1, comment['comment'])
 
-    #soup.find (name = 'div', attrs = Parser.topCommentsDict).replaceWidth(subtree)
-    #print (subtree.prettify())
+    #print (sortd[2]['score'], sortd[2]['comment'])
+    print (subtree.prettify())
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
