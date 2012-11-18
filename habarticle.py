@@ -83,7 +83,7 @@ def main (pageaddr):
         subtree.insert(-1, comment['comment'])
 
     #print (sortd[2]['score'], sortd[2]['comment'])
-    print (subtree.prettify())
+    print (soup.prettify())
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
 if __name__ == '__main__':
