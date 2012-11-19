@@ -28,6 +28,15 @@ class Parser:
     def parse (content):
         return BeautifulSoup(content)
 
+    def replace_comments (soup, sortd):
+        subtree = soup.find (name = 'div', attrs = Parser.topCommentsDict)
+
+        comments = subtree.findAll (recursive = False, name = 'div')
+        [comment.extract() for comment in comments]
+
+        for comment in sortd:
+            subtree.insert(-1, comment['comment'])
+
     def findComments (soup):
         return soup.findAll (name = 'div', attrs = Parser.adict)
 
@@ -45,6 +54,11 @@ class Parser:
         return item.prettify()
 
 class Rater:
+    def get_sorted_comments (soup):
+        rated = Rater.rate (soup)
+        sortd = Rater.sort (rated)
+        return sortd
+
     def rate(soup):
         rated_comments = []
         for comment in Parser.findComments(soup):
@@ -69,20 +83,11 @@ class Rater:
 
 def main (pageaddr):
     page = Reader(pageaddr).page
-    soup = Parser.parse(page)
-    rated = Rater.rate (soup)
-    sortd = Rater.sort (rated)
-    Rater.print_rates (sortd)
+    soup = Parser.parse (page)
+    sortd = Rater.get_sorted_comments (soup)
+    #Rater.print_rates (sortd)
 
-    subtree = soup.find (name = 'div', attrs = Parser.topCommentsDict)
-
-    comments = subtree.findAll (recursive = False, name = 'div')
-    [comment.extract() for comment in comments]
-
-    for comment in sortd:
-        subtree.insert(-1, comment['comment'])
-
-    #print (sortd[2]['score'], sortd[2]['comment'])
+    Parser.replace_comments (soup, sortd)
     print (soup.prettify())
 
 #page = urlopen("http://habrahabr.ru/post/158385/")
