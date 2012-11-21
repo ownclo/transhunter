@@ -6,10 +6,10 @@ from bs4 import BeautifulSoup
 from operator import itemgetter
 import re
 
-class Reader:
+class Page:
     def __init__ (self, pageaddr):
         self.pageaddr = pageaddr
-        self.page = self.read()
+        self.content = self.read()
 
     def read (self):
         if self.pageaddr is sys.stdin:
@@ -82,7 +82,7 @@ class Rater:
             print (Parser.prettyString(item['comment']))
 
 def main (pageaddr):
-    page = Reader(pageaddr).page
+    page = Page(pageaddr).content
     soup = Parser.parse (page)
     sortd = Rater.get_sorted_comments (soup)
     #Rater.print_rates (sortd)
