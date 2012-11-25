@@ -9,7 +9,7 @@
     }
 
     Parser.prototype.findComments = function(soup) {
-      return soup.getElementsByTagName('head'[0]);
+      return soup;
     };
 
     return Parser;

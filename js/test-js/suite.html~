@@ -8,9 +8,9 @@
     <script src="jasmine/jasmine.js"></script>
     <script src="jasmine/jasmine-html.js"></script>
 
-    <script src="../classes.js"></script>
+    <script src="../habarticle.js"></script>
 
-    <script src="classes_spec.js"></script>
+    <script src="habarticle_spec.js"></script>
   </head>
 
   <body id="suite">

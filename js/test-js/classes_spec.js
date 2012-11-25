@@ -4,10 +4,10 @@
   describe("Parser", function() {
     beforeEach(function() {
       this.parser = new Parser;
-      return this.document = window.document;
+      return this.document = document;
     });
     return it("finds comments", function() {
-      return (expect(this.parser.findComments(this.document))).toContain(this.document.head);
+      return (expect(this.parser.findComments(this.document))).toBe(this.document);
     });
   });
 

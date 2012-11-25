@@ -4,4 +4,4 @@ window.Parser = class Parser
     @comments = []
 
   findComments: (soup) ->
-    soup.getElementsByTagName ('head')
+    soup
