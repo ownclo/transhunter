@@ -11,4 +11,47 @@
     });
   });
 
+  describe("Sorter", function() {
+    beforeEach(function() {
+      this.data = [
+        {
+          "comment": "first_comment",
+          "score": 3
+        }, {
+          "comment": "second_comment",
+          "score": 6
+        }, {
+          "comment": "third_comment",
+          "score": 5
+        }
+      ];
+      this.sorter = new Sorter;
+      return this.sorted = this.sorter.sort(this.data);
+    });
+    it("returns all comments", function() {
+      var comment, _i, _len, _ref, _results;
+      _ref = this.data;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        comment = _ref[_i];
+        _results.push((expect(this.sorted)).toContain(comment));
+      }
+      return _results;
+    });
+    return it("sorts comments in descending order", function() {
+      return (expect(this.sorted)).toEqual([
+        {
+          "comment": "second_comment",
+          "score": 6
+        }, {
+          "comment": "third_comment",
+          "score": 5
+        }, {
+          "comment": "first_comment",
+          "score": 3
+        }
+      ]);
+    });
+  });
+
 }).call(this);
