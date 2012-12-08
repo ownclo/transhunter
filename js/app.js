@@ -2,16 +2,24 @@
 (function() {
 
   jQuery(function() {
-    var commentRoot, comment_pattern, comments, rated_comments, rater, sorted_comments, sorter, topComments;
+    var comment, commentRoot, comment_pattern, comments, rated_comments, rater, sorted_comments, sorter, _i, _j, _len, _len1, _results;
     rater = new Rater;
     sorter = new Sorter;
     comment_pattern = 'div.comment_item[id^="comment_"]';
     commentRoot = $('div.comments_list[id="comments"]');
-    topComments = ($(commentRoot)).find('>' + comment_pattern);
     comments = $(comment_pattern);
+    for (_i = 0, _len = comments.length; _i < _len; _i++) {
+      comment = comments[_i];
+      ($(comment)).detach();
+    }
     rated_comments = rater.rate(comments);
     sorted_comments = sorter.sort(rated_comments);
-    return alert(rated_comments[0].score);
+    _results = [];
+    for (_j = 0, _len1 = sorted_comments.length; _j < _len1; _j++) {
+      comment = sorted_comments[_j];
+      _results.push(($(commentRoot)).append($(comment.comment)));
+    }
+    return _results;
   });
 
 }).call(this);
