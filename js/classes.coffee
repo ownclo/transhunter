@@ -20,9 +20,11 @@ window.Rater = class Rater
 
   rate : (comments) ->
     for comment in comments
-      score = parseInt ($ comment).find('.score').attr("title")
-        .split(':')[0]
-        .split(' ')[1]
-      @rated_comments.push {"comment" : comment, "score" : score}
+      scoreItem = ($ comment).find('.score').attr('title')
+      if scoreItem isnt undefined
+        score = parseInt scoreItem
+          .split(':')[0]
+          .split(' ')[1]
+        @rated_comments.push {"comment" : comment, "score" : score}
 
     @rated_comments

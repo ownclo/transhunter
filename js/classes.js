@@ -39,14 +39,17 @@
     }
 
     Rater.prototype.rate = function(comments) {
-      var comment, score, _i, _len;
+      var comment, score, scoreItem, _i, _len;
       for (_i = 0, _len = comments.length; _i < _len; _i++) {
         comment = comments[_i];
-        score = parseInt(($(comment)).find('.score').attr("title").split(':')[0].split(' ')[1]);
-        this.rated_comments.push({
-          "comment": comment,
-          "score": score
-        });
+        scoreItem = ($(comment)).find('.score').attr('title');
+        if (scoreItem !== void 0) {
+          score = parseInt(scoreItem.split(':')[0].split(' ')[1]);
+          this.rated_comments.push({
+            "comment": comment,
+            "score": score
+          });
+        }
       }
       return this.rated_comments;
     };
