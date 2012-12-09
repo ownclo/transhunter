@@ -1,18 +1,14 @@
 {
   "name" : "HabraSorter",
   "version" : "1.0",
-  "manifest_version" : 1,
+  "manifest_version" : 2,
   "description" : "Sorts comments on habra's articles by votes.",
+  "background" : {"scripts" : ["jquery.js", "classes.js", "app.js", "background.js"]},
+  "permissions" : [
+    "http://habrahabr.ru/post/*"
+    ],
   "browser_action" : {
+    "name" : "Sort comments of this article",
     "default_icon" : "icon.png"
   },
-  "content_scripts" : [
-    {
-      "matches" : ["http://www.habrahabr.ru/post/*"],
-      "js" : ["app.js", "classes.js"]
-    }
-  ],
-  "permissions" : [
-    "http://habrahabr.ru/post/"
-    ]
 }
